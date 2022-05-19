@@ -1,0 +1,30 @@
+specVersion: 0.0.2
+description: Gravatar for Ethereum
+repository: https://github.com/graphprotocol/example-subgraph
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: ABIMarket
+    network: mainnet
+    source:
+      address: "0xb13Ae640d9e3a713f3C27A1Bb8Ed846e68a3b73B"
+      abi: ABIMarket
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - SaleOrder
+        - SaleOrderTransaction
+      abis:
+        - name: ABIMarket
+          file: ./abis/ABIMarket.json
+      eventHandlers:
+        - event: Sell(bytes32,indexed address,indexed uint256,address,uint256,indexed address,uint256)
+          handler: handleSellSaleOrder
+        - event: Buy(bytes32,indexed address,indexed uint256,address,uint256,indexed address,address,uint256,uint256)
+          handler: handleBuySaleOrder
+        - event: Cancel(bytes32,indexed address,indexed uint256,address,uint256,indexed address)
+          handler: handleCancelSaleOrder
+      file: ./src/mapping.ts

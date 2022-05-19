@@ -1,0 +1,70 @@
+# Enum
+enum TransactionType {
+  Sell
+  Buy
+  Cancel
+}
+
+enum ActionType {
+  Sell
+  Buy
+  Cancel
+  Swap
+  Burn
+  Claim
+}
+
+# Entity
+type Token @entity {
+  id: ID!
+  tokenId: BigInt!
+  tokenAddress: String!
+  createdAtTimestamp: BigInt!
+}
+
+type User @entity {
+  id: ID!
+}
+
+type TokenBalance @entity {
+  id: ID!
+  amount: BigInt!
+  owner: User
+  token: Token
+}
+
+type UserActivity @entity {
+  id: ID!
+  actionType: ActionType!
+  token: Token!
+  amount: BigInt!
+  from: String
+  to: String
+  createdAtTimestamp: BigInt!
+}
+
+type SaleOrder @entity {
+  id: ID!
+  token: Token!
+  currency: String! # ??? relationship Token
+  price: BigInt!
+  seller: User!
+  amount: BigInt
+  onSale: Boolean
+  # transactions: [SaleOrderTransaction!]! @derivedFrom(field: "order") # nếu cần hiển thị danh sách transaction của item
+  createdAtTimestamp: BigInt!
+  updatedAtTimestamp: BigInt!
+}
+
+type SaleOrderTransaction @entity {
+  id: ID!
+  order: SaleOrder!
+  transactionType: TransactionType!
+  from: User
+  to: User
+  amount: BigInt!
+  totalPrice: BigInt! # price * amount
+  pay: BigInt!
+  # commission: BigInt # confirm abi stat ???
+  createdAtTimestamp: BigInt!
+}
