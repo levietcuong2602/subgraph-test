@@ -19,6 +19,7 @@ dataSources:
         - SaleOrderTransaction
         - User
         - Token
+        - TokenHistory
       abis:
         - name: ABIMarket
           file: ./abis/ABIMarket.json
@@ -29,4 +30,4 @@ dataSources:
           handler: handleBuySaleOrder
         - event: Cancel(bytes32,indexed address,indexed uint256,address,uint256,indexed address)
           handler: handleCancelSaleOrder
-      file: ./src/ABIMarket.mapping.ts
+      file: ./src/handlers/ABIMarket.mapping.ts
