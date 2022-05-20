@@ -27,4 +27,4 @@ dataSources:
           handler: handleBuySaleOrder
         - event: Cancel(bytes32,indexed address,indexed uint256,address,uint256,indexed address)
           handler: handleCancelSaleOrder
-      file: ./src/mapping.ts
+      file: ./src/ABIMarket.mapping.ts
