@@ -33,7 +33,7 @@ type TokenBalance @entity {
   token: Token
 }
 
-type UserActivity @entity {
+type TokenHistory @entity {
   id: ID!
   actionType: ActionType!
   token: Token!
@@ -51,12 +51,12 @@ type SaleOrder @entity {
   seller: User!
   amount: BigInt!
   onSale: Boolean!
-  # transactions: [SaleOrderTransaction!]! @derivedFrom(field: "order") # nếu cần hiển thị danh sách transaction của item
+  # transactions: [SaleOrderHistory!]! @derivedFrom(field: "order") # nếu cần hiển thị danh sách transaction của item
   createdAtTimestamp: BigInt!
   updatedAtTimestamp: BigInt!
 }
 
-type SaleOrderTransaction @entity {
+type SaleOrderHistory @entity {
   id: ID!
   order: SaleOrder!
   transactionType: TransactionType!
