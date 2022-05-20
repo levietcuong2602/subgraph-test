@@ -17,6 +17,8 @@ dataSources:
       entities:
         - SaleOrder
         - SaleOrderTransaction
+        - User
+        - Token
       abis:
         - name: ABIMarket
           file: ./abis/ABIMarket.json
