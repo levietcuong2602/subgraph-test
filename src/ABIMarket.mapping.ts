@@ -1,9 +1,10 @@
 import { Sell, Buy, Cancel } from "../generated/ABIMarket/ABIMarket";
 import {
   SaleOrder,
-  SaleOrderTransaction,
+  SaleOrderHistory,
   Token,
   User,
+  TokenHistory,
 } from "../generated/schema";
 import { BigInt, log } from "@graphprotocol/graph-ts";
 
@@ -49,16 +50,17 @@ export function handleSellSaleOrder(event: Sell): void {
   saleOrder.save();
 
   // create sale order transaction
-  const saleOrderTransaction = new SaleOrderTransaction(id);
-  saleOrderTransaction.order = event.params.orderId.toHex();
-  saleOrderTransaction.transactionType = "Sell";
-  saleOrderTransaction.from = event.params.seller.toHexString();
-  saleOrderTransaction.amount = event.params.amount;
-  saleOrderTransaction.totalPrice = event.params.price.times(
-    event.params.amount
-  );
-  saleOrderTransaction.createdAtTimestamp = event.block.timestamp;
-  saleOrderTransaction.save();
+  const saleOrderHistory = new SaleOrderHistory(id);
+  saleOrderHistory.order = event.params.orderId.toHex();
+  saleOrderHistory.transactionType = "Sell";
+  saleOrderHistory.from = event.params.seller.toHexString();
+  saleOrderHistory.amount = event.params.amount;
+  saleOrderHistory.totalPrice = event.params.price.times(event.params.amount);
+  saleOrderHistory.createdAtTimestamp = event.block.timestamp;
+  saleOrderHistory.save();
+
+  // create token history
+  const tokenHistory = new TokenHistory(id);
 }
 
 export function handleBuySaleOrder(event: Buy): void {
@@ -105,20 +107,16 @@ export function handleBuySaleOrder(event: Buy): void {
     event.params.tokenId.toString(),
   ]);
   // create sale order transaction: Buy
-  const saleOrderTransaction = new SaleOrderTransaction(
-    event.params.orderId.toHex()
-  );
-  saleOrderTransaction.order = event.params.orderId.toHex();
-  saleOrderTransaction.transactionType = "Buy";
-  saleOrderTransaction.from = event.params.seller.toHexString();
-  saleOrderTransaction.to = event.params.buyer.toHexString();
-  saleOrderTransaction.amount = event.params.amount;
-  saleOrderTransaction.totalPrice = event.params.price.times(
-    event.params.amount
-  );
-  saleOrderTransaction.pay = event.params.pay;
-  saleOrderTransaction.createdAtTimestamp = event.block.timestamp;
-  saleOrderTransaction.save();
+  const saleOrderHistory = new SaleOrderHistory(event.params.orderId.toHex());
+  saleOrderHistory.order = event.params.orderId.toHex();
+  saleOrderHistory.transactionType = "Buy";
+  saleOrderHistory.from = event.params.seller.toHexString();
+  saleOrderHistory.to = event.params.buyer.toHexString();
+  saleOrderHistory.amount = event.params.amount;
+  saleOrderHistory.totalPrice = event.params.price.times(event.params.amount);
+  saleOrderHistory.pay = event.params.pay;
+  saleOrderHistory.createdAtTimestamp = event.block.timestamp;
+  saleOrderHistory.save();
 }
 
 export function handleCancelSaleOrder(event: Cancel): void {
@@ -148,14 +146,12 @@ export function handleCancelSaleOrder(event: Cancel): void {
   order.save();
 
   // create sale order transaction: Cancel
-  const saleOrderTransaction = new SaleOrderTransaction(
-    event.params.orderId.toHex()
-  );
-  saleOrderTransaction.order = event.params.orderId.toHex();
-  saleOrderTransaction.transactionType = "Cancel";
-  saleOrderTransaction.from = event.params.seller.toHexString();
-  saleOrderTransaction.amount = order.amount;
-  saleOrderTransaction.totalPrice = event.params.price.times(order.amount);
-  saleOrderTransaction.createdAtTimestamp = event.block.timestamp;
-  saleOrderTransaction.save();
+  const saleOrderHistory = new SaleOrderHistory(event.params.orderId.toHex());
+  saleOrderHistory.order = event.params.orderId.toHex();
+  saleOrderHistory.transactionType = "Cancel";
+  saleOrderHistory.from = event.params.seller.toHexString();
+  saleOrderHistory.amount = order.amount;
+  saleOrderHistory.totalPrice = event.params.price.times(order.amount);
+  saleOrderHistory.createdAtTimestamp = event.block.timestamp;
+  saleOrderHistory.save();
 }
