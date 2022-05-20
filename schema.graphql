@@ -49,8 +49,8 @@ type SaleOrder @entity {
   currency: String! # ??? relationship Token
   price: BigInt!
   seller: User!
-  amount: BigInt
-  onSale: Boolean
+  amount: BigInt!
+  onSale: Boolean!
   # transactions: [SaleOrderTransaction!]! @derivedFrom(field: "order") # nếu cần hiển thị danh sách transaction của item
   createdAtTimestamp: BigInt!
   updatedAtTimestamp: BigInt!

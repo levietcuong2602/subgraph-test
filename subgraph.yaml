@@ -8,7 +8,7 @@ dataSources:
     name: ABIMarket
     network: mainnet
     source:
-      address: "0xb13Ae640d9e3a713f3C27A1Bb8Ed846e68a3b73B"
+      address: "0x419bD3f2E6C19CDe3f4EfE267e5Eb436D79b1729"
       abi: ABIMarket
     mapping:
       kind: ethereum/events
