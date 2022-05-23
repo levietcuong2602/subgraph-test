@@ -6,7 +6,7 @@ import {
   User,
   TokenHistory,
 } from "../../generated/schema";
-import { TRANSACTION_TYPE, TOKEN_ACTION } from "../constants";
+// import { TRANSACTION_TYPE, TOKEN_ACTION } from "../constants";
 import { BigInt, log } from "@graphprotocol/graph-ts";
 
 export function handleSellSaleOrder(event: Sell): void {
@@ -53,7 +53,7 @@ export function handleSellSaleOrder(event: Sell): void {
   // create sale order transaction
   const saleOrderHistory = new SaleOrderHistory(id);
   saleOrderHistory.order = event.params.orderId.toHex();
-  saleOrderHistory.transactionType = TRANSACTION_TYPE.SELL;
+  saleOrderHistory.transactionType = "Sell";
   saleOrderHistory.from = event.params.seller.toHexString();
   saleOrderHistory.amount = event.params.amount;
   saleOrderHistory.totalPrice = event.params.price.times(event.params.amount);
@@ -62,7 +62,7 @@ export function handleSellSaleOrder(event: Sell): void {
 
   // create token history
   const tokenHistory = new TokenHistory(id);
-  tokenHistory.actionType = TOKEN_ACTION.SELL;
+  tokenHistory.actionType = "Sell";
   tokenHistory.amount = event.params.amount;
   tokenHistory.from = event.params.seller.toHexString();
   tokenHistory.createdAtTimestamp = event.block.timestamp;
@@ -95,7 +95,7 @@ export function handleBuySaleOrder(event: Buy): void {
   }
 
   const order = SaleOrder.load(event.params.orderId.toHex());
-  log.info("order: orderId={}", [event.params.orderId.toString()]);
+  log.info("order: orderId={}", [event.params.orderId.toHex()]);
   if (!order) {
     log.error("Order Id={} Not Found", [event.params.orderId.toString()]);
     return;
@@ -115,7 +115,7 @@ export function handleBuySaleOrder(event: Buy): void {
   // create sale order transaction: Buy
   const saleOrderHistory = new SaleOrderHistory(event.params.orderId.toHex());
   saleOrderHistory.order = event.params.orderId.toHex();
-  saleOrderHistory.transactionType = TRANSACTION_TYPE.BUY;
+  saleOrderHistory.transactionType = "Buy";
   saleOrderHistory.from = event.params.seller.toHexString();
   saleOrderHistory.to = event.params.buyer.toHexString();
   saleOrderHistory.amount = event.params.amount;
@@ -127,7 +127,7 @@ export function handleBuySaleOrder(event: Buy): void {
   // create token history
   const id = event.transaction.hash.toHex();
   const tokenHistory = new TokenHistory(id);
-  tokenHistory.actionType = TOKEN_ACTION.BUY;
+  tokenHistory.actionType = "Buy";
   tokenHistory.amount = event.params.amount;
   tokenHistory.from = event.params.seller.toHexString();
   tokenHistory.to = event.params.buyer.toHexString();
@@ -164,7 +164,7 @@ export function handleCancelSaleOrder(event: Cancel): void {
   // create sale order transaction: Cancel
   const saleOrderHistory = new SaleOrderHistory(event.params.orderId.toHex());
   saleOrderHistory.order = event.params.orderId.toHex();
-  saleOrderHistory.transactionType = TRANSACTION_TYPE.CANCEL;
+  saleOrderHistory.transactionType = "Cancel";
   saleOrderHistory.from = event.params.seller.toHexString();
   saleOrderHistory.amount = order.amount;
   saleOrderHistory.totalPrice = event.params.price.times(order.amount);
@@ -174,7 +174,7 @@ export function handleCancelSaleOrder(event: Cancel): void {
   // create token history
   const id = event.transaction.hash.toHex();
   const tokenHistory = new TokenHistory(id);
-  tokenHistory.actionType = TOKEN_ACTION.BUY;
+  tokenHistory.actionType = "Cancel";
   tokenHistory.amount = order.amount;
   tokenHistory.from = event.params.seller.toHexString();
   tokenHistory.createdAtTimestamp = event.block.timestamp;
