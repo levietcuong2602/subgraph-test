@@ -9,9 +9,10 @@ enum ActionType {
   Sell
   Buy
   Cancel
-  Swap
-  Burn
-  Claim
+  SendSwap
+  BurnSwap
+  SendClaim
+  OpenBox
 }
 
 # Entity
