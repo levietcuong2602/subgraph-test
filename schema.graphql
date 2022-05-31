@@ -69,3 +69,11 @@ type SaleOrderHistory @entity {
   # commission: BigInt # confirm abi stat ???
   createdAtTimestamp: BigInt!
 }
+
+type TransactionCounter @entity {
+  id: ID!
+  total: BigInt!
+  sell: BigInt!
+  buy: BigInt!
+  cancel: BigInt!
+}
