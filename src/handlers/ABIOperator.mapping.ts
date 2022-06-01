@@ -4,7 +4,7 @@ import {
   SendClaim,
   SendSwap,
 } from '../../generated/ABIOperator/ABIOperator';
-import { TokenHistory, Token } from '../../generated/schema';
+import { TokenHistory, Token, UserCounter } from '../../generated/schema';
 import { BigInt, log } from '@graphprotocol/graph-ts';
 
 export function handleSendSwap(event: SendSwap): void {
@@ -37,6 +37,19 @@ export function handleSendSwap(event: SendSwap): void {
     tokenHistory.to = event.params.tos[i].toHexString();
     tokenHistory.createdAtTimestamp = event.block.timestamp;
     tokenHistory.save();
+
+    // calculate total transaction of user
+    let userCounter = UserCounter.load(event.params.froms[i].toHexString());
+
+    if (userCounter == null) {
+      userCounter = new UserCounter(event.params.froms[i].toHexString());
+      userCounter.totalTransaction = BigInt.fromI32(0);
+    }
+    userCounter.totalTransaction = userCounter.totalTransaction.plus(
+      BigInt.fromI32(1)
+    );
+
+    userCounter.save();
   }
 }
 
@@ -70,6 +83,19 @@ export function handleSendClaim(event: SendClaim): void {
     tokenHistory.to = event.params.tos[i].toHexString();
     tokenHistory.createdAtTimestamp = event.block.timestamp;
     tokenHistory.save();
+
+    // calculate total transaction of user
+    let userCounter = UserCounter.load(event.params.froms[i].toHexString());
+
+    if (userCounter == null) {
+      userCounter = new UserCounter(event.params.froms[i].toHexString());
+      userCounter.totalTransaction = BigInt.fromI32(0);
+    }
+    userCounter.totalTransaction = userCounter.totalTransaction.plus(
+      BigInt.fromI32(1)
+    );
+
+    userCounter.save();
   }
 }
 
@@ -88,6 +114,19 @@ export function handleBurnSwap(event: BurnSwap): void {
   // tokenHistory.from = event.params.from.toHexString();
   // tokenHistory.createdAtTimestamp = event.block.timestamp;
   // tokenHistory.save();
+
+  // calculate total transaction of user
+  let userCounter = UserCounter.load(event.params.from.toHex());
+
+  if (userCounter == null) {
+    userCounter = new UserCounter(event.params.from.toHex());
+    userCounter.totalTransaction = BigInt.fromI32(0);
+  }
+  userCounter.totalTransaction = userCounter.totalTransaction.plus(
+    BigInt.fromI32(1)
+  );
+
+  userCounter.save();
 }
 
 export function handleOpenBox(event: OpenBox): void {

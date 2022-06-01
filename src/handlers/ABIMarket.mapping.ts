@@ -6,6 +6,7 @@ import {
   User,
   TokenHistory,
   TransactionCounter,
+  UserCounter,
 } from '../../generated/schema';
 // import { TRANSACTION_TYPE, TOKEN_ACTION } from "../constants";
 import { BigInt, log } from '@graphprotocol/graph-ts';
@@ -81,6 +82,23 @@ export function handleSellSaleOrder(event: Sell): void {
   transactionCounter.sell = transactionCounter.sell.plus(BigInt.fromI32(1));
 
   transactionCounter.save();
+
+  // calculate total transaction of user
+  let userCounter = UserCounter.load(event.params.seller.toHexString());
+
+  if (userCounter == null) {
+    userCounter = new UserCounter(event.params.seller.toHexString());
+    userCounter.totalTransaction = BigInt.fromI32(0);
+    userCounter.totalSellAmount = BigInt.fromI32(0);
+  }
+  userCounter.totalTransaction = userCounter.totalTransaction.plus(
+    BigInt.fromI32(1)
+  );
+  userCounter.totalSellAmount = userCounter.totalSellAmount.plus(
+    event.params.amount
+  );
+
+  userCounter.save();
 }
 
 export function handleBuySaleOrder(event: Buy): void {
@@ -160,6 +178,23 @@ export function handleBuySaleOrder(event: Buy): void {
   transactionCounter.buy = transactionCounter.buy.plus(BigInt.fromI32(1));
 
   transactionCounter.save();
+
+  // calculate total transaction of user
+  let userCounter = UserCounter.load(event.params.seller.toHexString());
+
+  if (userCounter == null) {
+    userCounter = new UserCounter(event.params.seller.toHexString());
+    userCounter.totalTransaction = BigInt.fromI32(0);
+    userCounter.totalBuyAmount = BigInt.fromI32(0);
+  }
+  userCounter.totalTransaction = userCounter.totalTransaction.plus(
+    BigInt.fromI32(1)
+  );
+  userCounter.totalBuyAmount = userCounter.totalBuyAmount.plus(
+    event.params.amount
+  );
+
+  userCounter.save();
 }
 
 export function handleCancelSaleOrder(event: Cancel): void {
@@ -219,4 +254,17 @@ export function handleCancelSaleOrder(event: Cancel): void {
   transactionCounter.cancel = transactionCounter.cancel.plus(BigInt.fromI32(1));
 
   transactionCounter.save();
+
+  // calculate total transaction of user
+  let userCounter = UserCounter.load(event.params.seller.toHexString());
+
+  if (userCounter == null) {
+    userCounter = new UserCounter(event.params.seller.toHexString());
+    userCounter.totalTransaction = BigInt.fromI32(0);
+  }
+  userCounter.totalTransaction = userCounter.totalTransaction.plus(
+    BigInt.fromI32(1)
+  );
+
+  userCounter.save();
 }

@@ -77,3 +77,10 @@ type TransactionCounter @entity {
   buy: BigInt!
   cancel: BigInt!
 }
+
+type UserCounter @entity {
+  id: ID!
+  totalTransaction: BigInt!
+  totalSellAmount: BigInt!
+  totalBuyAmount: BigInt!
+}
