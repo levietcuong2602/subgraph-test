@@ -1,13 +1,13 @@
-version: "3"
+version: '3'
 services:
   graph-node:
     image: graphprotocol/graph-node
     ports:
-      - "8000:8000"
-      - "8001:8001"
-      - "8020:8020"
-      - "8030:8030"
-      - "8040:8040"
+      - '8000:8000'
+      - '8001:8001'
+      - '8020:8020'
+      - '8030:8030'
+      - '8040:8040'
     depends_on:
       - ipfs
       - postgres
@@ -16,17 +16,19 @@ services:
       postgres_user: graph-node
       postgres_pass: let-me-in
       postgres_db: graph-node
-      ipfs: "ipfs:5001"
+      ipfs: 'ipfs:5001'
       # Change next line if you want to connect to a different JSON-RPC endpoint
-      ethereum: "mainnet:http://host.docker.internal:8545"
+      # ethereum: 'mainnet:http://host.docker.internal:8545'
+      # ethereum: 'mainnet:https://data-seed-prebsc-1-s1.binance.org:8545'
+      ethereum: 'mainnet:https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
       GRAPH_LOG: info
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - 'host.docker.internal:host-gateway'
 
   ipfs:
     image: ipfs/go-ipfs:v0.4.23
     ports:
-      - "5001:5001"
+      - '5001:5001'
     volumes:
       - ./data/ipfs:/data/ipfs
 
@@ -39,8 +41,8 @@ services:
   postgres:
     image: postgres
     ports:
-      - "5432:5432"
-    command: ["postgres", "-cshared_preload_libraries=pg_stat_statements"]
+      - '5432:5432'
+    command: ['postgres', '-cshared_preload_libraries=pg_stat_statements']
     environment:
       POSTGRES_USER: graph-node
       POSTGRES_PASSWORD: let-me-in

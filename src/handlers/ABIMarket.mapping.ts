@@ -68,6 +68,7 @@ export function handleSellSaleOrder(event: Sell): void {
   tokenHistory.amount = event.params.amount;
   tokenHistory.from = event.params.seller.toHexString();
   tokenHistory.createdAtTimestamp = event.block.timestamp;
+  tokenHistory.token = event.params.tokenId.toString();
   tokenHistory.save();
 
   // calculate total transaction
@@ -145,7 +146,9 @@ export function handleBuySaleOrder(event: Buy): void {
     event.params.tokenId.toString(),
   ]);
   // create sale order transaction: Buy
-  const saleOrderHistory = new SaleOrderHistory(event.params.orderId.toHex());
+  const saleOrderHistory = new SaleOrderHistory(
+    event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+  );
   saleOrderHistory.order = event.params.orderId.toHex();
   saleOrderHistory.transactionType = 'Buy';
   saleOrderHistory.from = event.params.seller.toHexString();
@@ -164,6 +167,7 @@ export function handleBuySaleOrder(event: Buy): void {
   tokenHistory.from = event.params.seller.toHexString();
   tokenHistory.to = event.params.buyer.toHexString();
   tokenHistory.createdAtTimestamp = event.block.timestamp;
+  tokenHistory.token = event.params.tokenId.toString();
   tokenHistory.save();
 
   // calculate total transaction
@@ -224,7 +228,9 @@ export function handleCancelSaleOrder(event: Cancel): void {
   order.save();
 
   // create sale order transaction: Cancel
-  const saleOrderHistory = new SaleOrderHistory(event.params.orderId.toHex());
+  const saleOrderHistory = new SaleOrderHistory(
+    event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+  );
   saleOrderHistory.order = event.params.orderId.toHex();
   saleOrderHistory.transactionType = 'Cancel';
   saleOrderHistory.from = event.params.seller.toHexString();
@@ -240,6 +246,7 @@ export function handleCancelSaleOrder(event: Cancel): void {
   tokenHistory.amount = order.amount;
   tokenHistory.from = event.params.seller.toHexString();
   tokenHistory.createdAtTimestamp = event.block.timestamp;
+  tokenHistory.token = event.params.tokenId.toString();
   tokenHistory.save();
 
   // calculate total transaction
