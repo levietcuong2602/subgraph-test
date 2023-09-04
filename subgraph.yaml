@@ -1,64 +1,27 @@
-specVersion: 0.0.2
+specVersion: 0.0.4
 description: Gravatar for Ethereum
 repository: https://github.com/graphprotocol/example-subgraph
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: ABIMarket
+    name: EntryPoint
     network: mainnet
     source:
       # address: '0xE5d61C2E24F2D8b41cC395A0cBd43525646F4611'
-      address: '0x92448E008A91Dbf1ba921dBA03404CFfbC2D1BE2'
-      abi: ABIMarket
-      startBlock: 10976362
+      address: '0x7E4F0bfB77eba984Fb3F81910F555F429671225c'
+      abi: EntryPoint
+      startBlock: 131890245
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - SaleOrder
-        - SaleOrderTransaction
-        - User
-        - Token
-        - TokenHistory
+        - Deposited
       abis:
-        - name: ABIMarket
-          file: ./abis/ABIMarket.json
+        - name: EntryPoint
+          file: ./abis/EntryPoint.json
       eventHandlers:
-        - event: Sell(bytes32,indexed address,indexed uint256,address,uint256,indexed address,uint256)
-          handler: handleSellSaleOrder
-        - event: Buy(bytes32,indexed address,indexed uint256,address,uint256,indexed address,address,uint256,uint256)
-          handler: handleBuySaleOrder
-        - event: Cancel(bytes32,indexed address,indexed uint256,address,uint256,indexed address)
-          handler: handleCancelSaleOrder
-      file: ./src/handlers/ABIMarket.mapping.ts
-  - kind: ethereum/contract
-    name: ABIOperator
-    network: mainnet
-    source:
-      # address: '0x0d5E84BaD3Ac9D669D6cf97BcDa29F574CB49524'
-      address: '0x05089CB34ee139650258BB3D6A25208752902F2A'
-      abi: ABIOperator
-      startBlock: 10976373
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.5
-      language: wasm/assemblyscript
-      entities:
-        - User
-      abis:
-        - name: ABIOperator
-          file: ./abis/ABIOperator.json
-      eventHandlers:
-        - event: ConvertToChain(indexed address,indexed uint256,address[],address[],uint256[])
-          handler: handleConvertToChain
-        - event: SendClaim(indexed address,indexed uint256,address[],address[],uint256[])
-          handler: handleSendClaim
-        - event: ConvertToGame(indexed address,indexed uint256,address,address,uint256)
-          handler: handleConvertToGame
-        - event: OpenBox(indexed address,uint256,address,uint256)
-          handler: handleOpenBox
-        - event: SendOpenBoxReward(address[],uint256[],address[],address,uint256[])
-          handler: handleSendOpenBoxReward
-      file: ./src/handlers/ABIOperator.mapping.ts
+        - event: Deposited(indexed address,uint256)
+          handler: handleDeposited
+      file: ./src/handlers/EntryPoint.mapping.ts

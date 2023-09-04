@@ -1,7 +1,8 @@
 version: '3'
 services:
   graph-node:
-    image: graphprotocol/graph-node
+    image: graphprotocol/graph-node:v0.29.0
+    platform: linux/amd64
     ports:
       - '8000:8000'
       - '8001:8001'
@@ -19,14 +20,18 @@ services:
       ipfs: 'ipfs:5001'
       # Change next line if you want to connect to a different JSON-RPC endpoint
       # ethereum: 'mainnet:http://host.docker.internal:8545'
-      # ethereum: 'mainnet:https://data-seed-prebsc-1-s1.binance.org:8545'
-      ethereum: 'mainnet:https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
+      # ethereum: 'mainnet:https://polygon-mumbai.g.alchemy.com/v2/nf4tMvfGGwWRDhtGUcmBXaY0L-VJVseD'
+      ethereum: 'mainnet:https://public-node-api.klaytnapi.com/v1/baobab'
       GRAPH_LOG: info
+      GRAPH_ETH_CALL_BY_NUMBER: 1
+      GRAPH_ALLOW_NON_DETERMINISTIC_IPFS: 1
+      RUST_LOG: info
     extra_hosts:
       - 'host.docker.internal:host-gateway'
 
   ipfs:
     image: ipfs/go-ipfs:v0.4.23
+    platform: linux/amd64
     ports:
       - '5001:5001'
     volumes:
@@ -39,7 +44,7 @@ services:
   #   command: -i 15 --gasLimit 8000000 --deterministic
 
   postgres:
-    image: postgres
+    image: postgres:latest
     ports:
       - '5432:5432'
     command: ['postgres', '-cshared_preload_libraries=pg_stat_statements']
@@ -47,5 +52,7 @@ services:
       POSTGRES_USER: graph-node
       POSTGRES_PASSWORD: let-me-in
       POSTGRES_DB: graph-node
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=C"
+      PGDATA: "/var/lib/postgresql/data"
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
